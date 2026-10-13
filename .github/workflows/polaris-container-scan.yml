@@ -1,0 +1,68 @@
+name: Polaris Container Scan
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  container-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # -----------------------------------------
+      # Checkout repository
+      # -----------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      # -----------------------------------------
+      # Build Docker image
+      # -----------------------------------------
+      - name: Build Docker image
+        run: |
+          docker build -t polaris-vulnerable-demo:latest .
+
+
+      # -----------------------------------------
+      # Display image
+      # -----------------------------------------
+      - name: Show Docker image
+        run: |
+          docker images polaris-vulnerable-demo
+
+
+      # -----------------------------------------
+      # Export Docker image
+      # -----------------------------------------
+      - name: Export Docker image
+        run: |
+          docker save polaris-vulnerable-demo:latest | gzip > polaris-vulnerable-demo.tar.gz
+
+          echo "Container archive:"
+          ls -lh polaris-vulnerable-demo.tar.gz
+
+
+      # -----------------------------------------
+      # Polaris SCA Container Scan
+      # -----------------------------------------
+      - name: Polaris Container Scan
+        id: polaris-scan
+        uses: blackduck-inc/black-duck-security-scan@v2
+        with:
+
+          polaris_server_url: ${{ vars.POLARIS_SERVER_URL }}
+          polaris_access_token: ${{ secrets.POLARIS_ACCESS_TOKEN }}
+
+          polaris_application_name: ${{ github.event.repository.name }}
+          polaris_project_name: ${{ github.event.repository.name }}
+
+          polaris_assessment_types: "SCA"
+
+          polaris_test_sca_type: "SCA-CONTAINER"
+
+          polaris_artifactToUpload: "polaris-vulnerable-demo.tar.gz"
