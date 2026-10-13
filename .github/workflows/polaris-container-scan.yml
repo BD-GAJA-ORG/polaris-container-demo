@@ -58,8 +58,8 @@ jobs:
           polaris_server_url: ${{ vars.POLARIS_SERVER_URL }}
           polaris_access_token: ${{ secrets.POLARIS_ACCESS_TOKEN_POC }}
 
-          polaris_application_name: "Gaja-Impl-Poc"
-          polaris_project_name: "Container-Scan"
+          polaris_application_name: "gaja-impl-app"
+          polaris_project_name: "Github-Actions-Container-Scan"
 
           polaris_assessment_types: "SCA"
 
