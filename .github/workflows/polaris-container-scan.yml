@@ -22,7 +22,7 @@ jobs:
         run: |
           docker build -t polaris-vulnerable-demo:latest .
 
-      # Verify Docker image
+      # Display Docker image
       - name: Show Docker image
         run: |
           docker images polaris-vulnerable-demo
@@ -38,13 +38,28 @@ jobs:
       # Polaris SCA Container Scan
       - name: Polaris Container Scan
         id: polaris-scan
+
+        # Allow the workflow to continue even if Bridge returns
+        # a non-zero exit code due to detected issues/build-break policy.
+        continue-on-error: true
+
         uses: blackduck-inc/black-duck-security-scan@v2
+
         with:
-          polaris_server_url: "https://poc.polaris.blackduck.com"
-          polaris_access_token: "s4jpgckfat47f3dcaebrc486limidq5ugqi4g5dogi9fab3st3mmdbied7u6t7gfrgs2n37aijqrc"
+          polaris_server_url: ${{ secrets.POLARIS_SERVER_URL }}
+          polaris_access_token: ${{ secrets.POLARIS_ACCESS_TOKEN_POC }}
+
           polaris_application_name: "gaja-impl-app"
           polaris_project_name: "Github-Actions-Container-Scan"
+
           polaris_assessment_types: "SCA"
           polaris_test_sca_type: "SCA-CONTAINER"
+
           polaris_artifactToUpload: "polaris-vulnerable-demo.tar.gz"
           polaris_container_name: "polaris-vulnerable-demo"
+
+      # Optional final step so the demo clearly shows completion
+      - name: Container scan completed
+        run: |
+          echo "Polaris container scan completed."
+          echo "Review the detected vulnerabilities in Polaris."
