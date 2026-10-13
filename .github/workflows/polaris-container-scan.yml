@@ -13,32 +13,21 @@ jobs:
 
     steps:
 
-      # -----------------------------------------
       # Checkout repository
-      # -----------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
-
-      # -----------------------------------------
       # Build Docker image
-      # -----------------------------------------
       - name: Build Docker image
         run: |
           docker build -t polaris-vulnerable-demo:latest .
 
-
-      # -----------------------------------------
-      # Display image
-      # -----------------------------------------
+      # Verify Docker image
       - name: Show Docker image
         run: |
           docker images polaris-vulnerable-demo
 
-
-      # -----------------------------------------
       # Export Docker image
-      # -----------------------------------------
       - name: Export Docker image
         run: |
           docker save polaris-vulnerable-demo:latest | gzip > polaris-vulnerable-demo.tar.gz
@@ -46,15 +35,11 @@ jobs:
           echo "Container archive:"
           ls -lh polaris-vulnerable-demo.tar.gz
 
-
-      # -----------------------------------------
       # Polaris SCA Container Scan
-      # -----------------------------------------
       - name: Polaris Container Scan
         id: polaris-scan
         uses: blackduck-inc/black-duck-security-scan@v2
         with:
-
           polaris_server_url: ${{ secrets.POLARIS_SERVER_URL }}
           polaris_access_token: ${{ secrets.POLARIS_ACCESS_TOKEN_POC }}
           polaris_application_name: "gaja-impl-app"
@@ -62,4 +47,4 @@ jobs:
           polaris_assessment_types: "SCA"
           polaris_test_sca_type: "SCA-CONTAINER"
           polaris_artifactToUpload: "polaris-vulnerable-demo.tar.gz"
-          polaris.container.name: "polaris-vulnerable-demo"
+          polaris_container_name: "polaris-vulnerable-demo"
