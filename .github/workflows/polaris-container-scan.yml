@@ -57,12 +57,9 @@ jobs:
 
           polaris_server_url: ${{ secrets.POLARIS_SERVER_URL }}
           polaris_access_token: ${{ secrets.POLARIS_ACCESS_TOKEN_POC }}
-
           polaris_application_name: "gaja-impl-app"
           polaris_project_name: "Github-Actions-Container-Scan"
-
           polaris_assessment_types: "SCA"
-
           polaris_test_sca_type: "SCA-CONTAINER"
-
           polaris_artifactToUpload: "polaris-vulnerable-demo.tar.gz"
+          polaris.container.name: "polaris-vulnerable-demo"
