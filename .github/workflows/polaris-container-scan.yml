@@ -40,7 +40,7 @@ jobs:
         id: polaris-scan
         uses: blackduck-inc/black-duck-security-scan@v2
         with:
-          polaris_server_url: ${{ secrets.POLARIS_SERVER_URL }}
+          polaris_server_url: "https://poc.polaris.blackduck.com"
           polaris_access_token: "s4jpgckfat47f3dcaebrc486limidq5ugqi4g5dogi9fab3st3mmdbied7u6t7gfrgs2n37aijqrc"
           polaris_application_name: "gaja-impl-app"
           polaris_project_name: "Github-Actions-Container-Scan"
